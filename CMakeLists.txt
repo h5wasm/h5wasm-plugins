@@ -31,7 +31,7 @@ find_package(HDF5 REQUIRED CONFIG PATHS ${hdf5_SOURCE_DIR})
 
 FetchContent_Declare(
   h5pl
-  # PATCH_COMMAND git apply --ignore-whitespace "${CMAKE_CURRENT_LIST_DIR}/h5pl.patch"
+  PATCH_COMMAND git apply --ignore-whitespace "${CMAKE_CURRENT_LIST_DIR}/h5pl.patch"
   GIT_REPOSITORY https://github.com/HDFGroup/hdf5_plugins
   GIT_TAG 1.14.0
 )
@@ -91,26 +91,45 @@ add_subdirectory(${h5pl_SOURCE_DIR} ${h5pl_BINARY_DIR})
 set(PLUGIN_DIR ${CMAKE_CURRENT_BINARY_DIR}/plugins CACHE PATH "")
 message(STATUS "PLUGIN_DIR: ${PLUGIN_DIR}")
 
-set(H5ZBSHUF_PLUGIN_NAME "libH5Zbshuf.so")
-add_custom_target(h5bshuf_shared ALL 
-  COMMAND 
-    ${CMAKE_C_COMPILER} -s SIDE_MODULE=1 ${h5pl_BINARY_DIR}/bin/libh5bshuf.a -o ${H5ZBSHUF_PLUGIN_NAME}
-  DEPENDS h5bshuf
-)
-install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${H5ZBSHUF_PLUGIN_NAME} DESTINATION ${PLUGIN_DIR})
+function(build_shared_plugin base_name plugin_libs plugin_depends)
+  list(TRANSFORM plugin_libs PREPEND ${h5pl_BINARY_DIR}/bin/)
+  set(_plugin_name "libH5Z${base_name}.so")
+  add_custom_target(h5${base_name}_shared ALL 
+    COMMAND 
+      ${CMAKE_C_COMPILER} -s SIDE_MODULE=1 ${plugin_libs} -o ${_plugin_name}
+    DEPENDS ${plugin_depends}
+  )
+  install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${_plugin_name} DESTINATION ${PLUGIN_DIR})
+endfunction()
 
-set(H5ZSTD_PLUGIN_NAME "libH5Zzstd.so")
-add_custom_target(h5zstd_shared ALL 
-  COMMAND 
-    ${CMAKE_C_COMPILER} -s SIDE_MODULE=1 ${h5pl_BINARY_DIR}/bin/libh5zstd.a ${h5pl_BINARY_DIR}/bin/libzstd.a -o ${H5ZSTD_PLUGIN_NAME}
-  DEPENDS h5zstd ZSTD
-)
-install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${H5ZSTD_PLUGIN_NAME} DESTINATION ${PLUGIN_DIR})
+build_shared_plugin(bz2 "libh5bz2.a;libbz2.a" "h5bz2;BZ2")
+build_shared_plugin(bshuf "libh5bshuf.a" "h5bshuf")
+build_shared_plugin(zstd "libh5zstd.a;libzstd.a" "h5zstd;ZSTD")
+build_shared_plugin(lz4 "libh5lz4.a" "h5lz4")
+build_shared_plugin(lzf "libh5lzf.a" "h5lzf")
+# build_shared_plugin(zfp list(libh5zfp.a))
 
-set(H5ZLZ4_PLUGIN_NAME "libH5Zlz4.so")
-add_custom_target(h5lz4_shared ALL 
-  COMMAND 
-    ${CMAKE_C_COMPILER} -s SIDE_MODULE=1 ${h5pl_BINARY_DIR}/bin/libh5lz4.a -o ${H5ZLZ4_PLUGIN_NAME}
-  DEPENDS h5lz4
-)
-install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${H5ZLZ4_PLUGIN_NAME} DESTINATION ${PLUGIN_DIR})
+
+# set(H5ZBSHUF_PLUGIN_NAME "libH5Zbshuf.so")
+# add_custom_target(h5bshuf_shared ALL 
+#   COMMAND 
+#     ${CMAKE_C_COMPILER} -s SIDE_MODULE=1 ${h5pl_BINARY_DIR}/bin/libh5bshuf.a -o ${H5ZBSHUF_PLUGIN_NAME}
+#   DEPENDS h5bshuf
+# )
+# install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${H5ZBSHUF_PLUGIN_NAME} DESTINATION ${PLUGIN_DIR})
+
+# set(H5ZSTD_PLUGIN_NAME "libH5Zzstd.so")
+# add_custom_target(h5zstd_shared ALL 
+#   COMMAND 
+#     ${CMAKE_C_COMPILER} -s SIDE_MODULE=1 ${h5pl_BINARY_DIR}/bin/libh5zstd.a ${h5pl_BINARY_DIR}/bin/libzstd.a -o ${H5ZSTD_PLUGIN_NAME}
+#   DEPENDS h5zstd ZSTD
+# )
+# install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${H5ZSTD_PLUGIN_NAME} DESTINATION ${PLUGIN_DIR})
+
+# set(H5ZLZ4_PLUGIN_NAME "libH5Zlz4.so")
+# add_custom_target(h5lz4_shared ALL 
+#   COMMAND 
+#     ${CMAKE_C_COMPILER} -s SIDE_MODULE=1 ${h5pl_BINARY_DIR}/bin/libh5lz4.a -o ${H5ZLZ4_PLUGIN_NAME}
+#   DEPENDS h5lz4
+# )
+# install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${H5ZLZ4_PLUGIN_NAME} DESTINATION ${PLUGIN_DIR})
