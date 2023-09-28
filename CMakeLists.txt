@@ -1,0 +1,116 @@
+cmake_minimum_required(VERSION 3.24)
+project (H5WASM_PLUGINS C)
+set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/plugins" CACHE STRING "local install folder" FORCE)
+set(EMSCRIPTEN_LINK_FLAGS "-s WASM=1 -s SIDE_MODULE=2 -v")
+
+include(FetchContent)
+FetchContent_Declare(
+  hdf5
+  URL file:///Users/bbm/dev/libhdf5-wasm/wasm_build/1_12_2/HDF5-1.12.2-Emscripten.tar.gz
+  # URL https://github.com/usnistgov/libhdf5-wasm/releases/download/v0.3.0_3.1.28/libhdf5-1_12_2-wasm.tar.gz
+  # URL_HASH SHA256=7089f9bf29dc3759d7aa77848cfa12d546eabd152d40dd00a90aace99c056600
+  # OVERRIDE_FIND_PACKAGE
+)
+FetchContent_MakeAvailable(hdf5)
+# set(HDF5_FIND_DEBUG ON CACHE STRING "debug" FORCE)
+set(HDF5_DIR ${hdf5_SOURCE_DIR}/HDF_Group/HDF5/1.12.2/cmake)
+find_package(HDF5 REQUIRED CONFIG PATHS ${hdf5_SOURCE_DIR})
+
+# FetchContent_Declare(
+#   zlib
+#   URL http://zlib.net/fossils/zlib-1.3.tar.gz
+#   URL_HASH  SHA256=ff0ba4c292013dbc27530b3a81e1f9a813cd39de01ca5e0f8bf355702efa593e
+#   OVERRIDE_FIND_PACKAGE
+# )
+# FetchContent_MakeAvailable(zlib)
+
+# find_package(ZLIB CONFIG REQUIRED)
+# message(STATUS "ZLIB_FOUND: ${ZLIB_FOUND}, ${zlib_SOURCE_DIR}")
+# set(HDF5_DIR /Users/bbm/mambaforge/envs/h5wasm)
+
+FetchContent_Declare(
+  h5pl
+  # PATCH_COMMAND git apply --ignore-whitespace "${CMAKE_CURRENT_LIST_DIR}/h5pl.patch"
+  GIT_REPOSITORY https://github.com/HDFGroup/hdf5_plugins
+  GIT_TAG 1.14.0
+)
+if(NOT h5pl_POPULATED)
+  FetchContent_Populate(
+    h5pl
+  )
+endif()
+# include(${h5pl_SOURCE_DIR}/config/cmake/cacheinit.cmake)
+
+# set (ZLIB_TGZ_URL "http://zlib.net/fossils/zlib-1.3.tar.gz" CACHE STRING "Use ZLib from compressed file" FORCE)
+# set (ZLIB_PACKAGE_NAME "zlib" CACHE STRING "Name of ZLIB package" FORCE)
+set (PL_PACKAGE_NAME "PL")
+set (TGZPATH ${h5pl_SOURCE_DIR}/libs)
+# set (USE_SHARED_LIBS OFF CACHE BOOL "Use Shared Libraries" FORCE)
+
+# set (BUILD_LZ4_LIBRARY_SOURCE OFF CACHE BOOL "build the lz4 library within the plugin" FORCE)
+add_definitions(-DHAVE_ARPA_INET_H)
+set (H5PL_ALLOW_EXTERNAL_SUPPORT "TGZ" CACHE STRING "Allow External Library Building (NO GIT TGZ)" FORCE)
+set (ENABLE_BLOSC ON)
+set (BLOSC_PACKAGE_NAME "BLOSC")
+set (BLOSC_TGZ_NAME "c-blosc.tar.gz")
+set (ENABLE_BSHUF ON)
+set (BSHUF_PACKAGE_NAME "BSHUF")
+set (ENABLE_BZIP2 ON)
+set (BZ2_TGZ_NAME "BZ2.tar.gz")
+set (BZ2_PACKAGE_NAME "BZ2")
+set (ENABLE_JPEG ON)
+set (JPEG_TGZ_NAME JPEG.tar.gz)
+set (JPEG_PACKAGE_NAME "JPEG")
+set (ENABLE_LZ4 ON)
+set (LZ4_TGZ_NAME "lz4.tar.gz")
+set (LZ4_PACKAGE_NAME "LZ4")
+set (ENABLE_LZF ON)
+set (LZF_TGZ_NAME "lzf.tar.gz")
+set (LZF_PACKAGE_NAME "LZF")
+set (ENABLE_SZ ON)
+set (SZ_TGZ_NAME "szf.tar.gz")
+set (SZ_PACKAGE_NAME "SZ")
+set (SZ_FIND_DEPS ON)
+set (ENABLE_ZFP ON)
+set (ZFP_TGZ_NAME "zfp.tar.gz")
+set (ZFP_PACKAGE_NAME "ZFP")
+set (ENABLE_ZSTD ON)
+set (ZSTD_TGZ_NAME "zstd.tar.gz")
+set (ZSTD_PACKAGE_NAME "ZSTD")
+
+# option(TGZPATH "where to get zipped libraries" ${h5pl_SOURCE_DIR}/libs)
+# option(ENABLE_BLOSC "enable blosc" ON)
+# option(ENABLE_BSHUF "enable bshuf" ON)
+# option(ENABLE_BZIP2 "enable bzip2" ON)
+
+# message(STATUS "LIBS: ${TGZPATH}")
+
+add_subdirectory(${h5pl_SOURCE_DIR} ${h5pl_BINARY_DIR})
+
+set(PLUGIN_DIR ${CMAKE_CURRENT_BINARY_DIR}/plugins CACHE PATH "")
+message(STATUS "PLUGIN_DIR: ${PLUGIN_DIR}")
+
+set(H5ZBSHUF_PLUGIN_NAME "libH5Zbshuf.so")
+add_custom_target(h5bshuf_shared ALL 
+  COMMAND 
+    ${CMAKE_C_COMPILER} -s SIDE_MODULE=1 ${h5pl_BINARY_DIR}/bin/libh5bshuf.a -o ${H5ZBSHUF_PLUGIN_NAME}
+  DEPENDS h5bshuf
+)
+install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${H5ZBSHUF_PLUGIN_NAME} DESTINATION ${PLUGIN_DIR})
+
+set(H5ZSTD_PLUGIN_NAME "libH5Zzstd.so")
+add_custom_target(h5zstd_shared ALL 
+  COMMAND 
+    ${CMAKE_C_COMPILER} -s SIDE_MODULE=1 ${h5pl_BINARY_DIR}/bin/libh5zstd.a ${h5pl_BINARY_DIR}/bin/libzstd.a -o ${H5ZSTD_PLUGIN_NAME}
+  DEPENDS h5zstd ZSTD
+)
+install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${H5ZSTD_PLUGIN_NAME} DESTINATION ${PLUGIN_DIR})
+
+set(H5ZLZ4_PLUGIN_NAME "libH5Zlz4.so")
+add_custom_target(h5lz4_shared ALL 
+  COMMAND 
+    ${CMAKE_C_COMPILER} -s SIDE_MODULE=1 ${h5pl_BINARY_DIR}/bin/libh5lz4.a -o ${H5ZLZ4_PLUGIN_NAME}
+  DEPENDS h5lz4
+)
+install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${H5ZLZ4_PLUGIN_NAME} DESTINATION ${PLUGIN_DIR})
