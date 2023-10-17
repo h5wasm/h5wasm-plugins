@@ -1,28 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c915b0ab..ad11406f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -139,6 +139,8 @@ if (NOT MINGW)
+     endif ()
+   elseif (WIN32 AND NOT CMAKE_C_COMPILER_ID MATCHES "Intel[Ll][Ll][Vv][Mm]")
+     FILTER_OPTION (LZ4)
++  elseif (EMSCRIPTEN)
++    FILTER_OPTION (LZ4)
+   else ()
+     set (ENABLE_LZ4 OFF CACHE BOOL "" FORCE)
+   endif ()
 diff --git a/SZ/config/cmake/H5SZMacros.cmake b/SZ/config/cmake/H5SZMacros.cmake
-index f0c1ecf5..11f959bc 100644
+index aa133a0d..3de93818 100644
 --- a/SZ/config/cmake/H5SZMacros.cmake
 +++ b/SZ/config/cmake/H5SZMacros.cmake
-@@ -48,7 +48,7 @@ macro (EXTERNAL_SZ_LIBRARY compress_type libtype)
-             -DBUILD_SZ_EXAMPLES:BOOL=OFF
-             -DSZ_PACKAGE_EXT:STRING=${SZ_PACKAGE_EXT}
-             -DSZ_EXTERNALLY_CONFIGURED:BOOL=OFF
--            -DSZ_FIND_DEPS:BOOL=OFF
-+            -DSZ_FIND_DEPS:BOOL=ON
-             -DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}
-             -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_INSTALL_PREFIX}
-             -DCMAKE_RUNTIME_OUTPUT_DIRECTORY:PATH=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-diff --git a/config/cmake/HDFPluginMacros.cmake b/config/cmake/HDFPluginMacros.cmake
-index 6cb9e043..164a13cf 100644
---- a/config/cmake/HDFPluginMacros.cmake
-+++ b/config/cmake/HDFPluginMacros.cmake
-@@ -280,8 +280,8 @@ macro (HDF5_SUPPORT link_hdf)
-             #plugin source needs to be linked with HDF5
-             set (LINK_LIBS ${LINK_LIBS} ${HDF5_C_STATIC_LIBRARY})
-           endif ()
--          set_property (TARGET ${HDF5_NAMESPACE}h5dump PROPERTY IMPORTED_LOCATION "${HDF5_TOOLS_DIR}/h5dump")
--          set_property (TARGET ${HDF5_NAMESPACE}h5repack PROPERTY IMPORTED_LOCATION "${HDF5_TOOLS_DIR}/h5repack")
-+          # set_property (TARGET ${HDF5_NAMESPACE}h5dump PROPERTY IMPORTED_LOCATION "${HDF5_TOOLS_DIR}/h5dump.js")
-+          # set_property (TARGET ${HDF5_NAMESPACE}h5repack PROPERTY IMPORTED_LOCATION "${HDF5_TOOLS_DIR}/h5repack.js")
-         endif ()
-       endif ()
-     else ()
+@@ -12,7 +12,7 @@
+ 
+ include (FetchContent)
+ #-------------------------------------------------------------------------------
+-macro (EXTERNAL_SZ_LIBRARY compress_type libtype)
++macro (EXTERNAL_SZ_LIBRARY compress_type)
+   if (${compress_type} MATCHES "GIT")
+     FetchContent_Declare (SZF
+         GIT_REPOSITORY ${SZ_URL}
