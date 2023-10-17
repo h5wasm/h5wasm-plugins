@@ -1,37 +1,58 @@
 cmake_minimum_required(VERSION 3.24)
 project (H5WASM_PLUGINS C)
+include(FetchContent)
+
 set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_EXE_LINKER_FLAGS_INIT "-sNODERAWFS=1 -sFORCE_FILESYSTEM=1 -sSINGLE_FILE=1 --extern-pre-js=${CMAKE_SOURCE_DIR}/shebang.txt" CACHE INTERNAL "")
 set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/plugins" CACHE STRING "local install folder" FORCE)
 set(EMSCRIPTEN_LINK_FLAGS "-s WASM=1 -s SIDE_MODULE=2 -v")
 
-include(FetchContent)
+FetchContent_Declare(
+  zlib
+  URL http://zlib.net/fossils/zlib-1.3.tar.gz
+  URL_HASH  SHA256=ff0ba4c292013dbc27530b3a81e1f9a813cd39de01ca5e0f8bf355702efa593e
+  OVERRIDE_FIND_PACKAGE
+)
+FetchContent_MakeAvailable(zlib)
+
+find_package(ZLIB CONFIG REQUIRED)
+message(STATUS "ZLIB_FOUND: ${ZLIB_FOUND}, ${zlib_SOURCE_DIR}")
+
 FetchContent_Declare(
   hdf5
-  URL file:///Users/bbm/dev/libhdf5-wasm/wasm_build/1_12_2/HDF5-1.12.2-Emscripten.tar.gz
-  # URL https://github.com/usnistgov/libhdf5-wasm/releases/download/v0.3.0_3.1.28/libhdf5-1_12_2-wasm.tar.gz
-  # URL_HASH SHA256=7089f9bf29dc3759d7aa77848cfa12d546eabd152d40dd00a90aace99c056600
-  # OVERRIDE_FIND_PACKAGE
+  URL https://github.com/HDFGroup/hdf5/archive/refs/tags/hdf5-1_12_2.tar.gz
+  URL_HASH SHA256=1ca14cadff7bc4b61826eee591da1a330f44c107db66c9510ee95df3b2bc5f78
+  OVERRIDE_FIND_PACKAGE
 )
-FetchContent_MakeAvailable(hdf5)
-# set(HDF5_FIND_DEBUG ON CACHE STRING "debug" FORCE)
-set(HDF5_DIR ${hdf5_SOURCE_DIR}/HDF_Group/HDF5/1.12.2/cmake)
-find_package(HDF5 REQUIRED CONFIG PATHS ${hdf5_SOURCE_DIR})
+FetchContent_Populate(hdf5)
 
-# FetchContent_Declare(
-#   zlib
-#   URL http://zlib.net/fossils/zlib-1.3.tar.gz
-#   URL_HASH  SHA256=ff0ba4c292013dbc27530b3a81e1f9a813cd39de01ca5e0f8bf355702efa593e
-#   OVERRIDE_FIND_PACKAGE
-# )
-# FetchContent_MakeAvailable(zlib)
+set(HDF5_ALLOW_EXTERNAL_SUPPORT "NO")
+set (BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+option(BUILD_SHARED_LIBS "Build shared libs" OFF)
+option(HDF5_BUILD_EXAMPLES "Build Examples" OFF)
+option(HDF5_BUILD_TOOLS "Build Tools" ON)
+option(HDF5_BUILD_UTILS "Build Utils" OFF)
+option(HDF5_BUILD_CPP_LIB "Build CPP libraries" ON)
+option(HDF5_ENABLE_Z_LIB_SUPPORT "Enable ZLIB" ON)
+option(HDF5_ENABLE_SZIP_SUPPORT "Enable SZIP" OFF)
+option (HDF5_ENABLE_SZIP_ENCODING "Use SZip Encoding" OFF)
+option(SZIP_USE_EXTERNAL "needs to be off" 0)
+option(ZLIB_USE_EXTERNAL "needs to be off" 0)
 
-# find_package(ZLIB CONFIG REQUIRED)
-# message(STATUS "ZLIB_FOUND: ${ZLIB_FOUND}, ${zlib_SOURCE_DIR}")
+set (BUILD_TESTING OFF CACHE BOOL "Do not build tests by default" FORCE)
+set(H5_HAVE_GETPWUID OFF)
+set(H5_HAVE_SIGNAL OFF)
+
+set(CMAKE_BUILD_TYPE RELEASE)
+
+add_subdirectory(${hdf5_SOURCE_DIR} ${hdf5_BINARY_DIR})
+
+
 # set(HDF5_DIR /Users/bbm/mambaforge/envs/h5wasm)
 
 FetchContent_Declare(
   h5pl
-  PATCH_COMMAND git apply --ignore-whitespace "${CMAKE_CURRENT_LIST_DIR}/h5pl.patch"
+  PATCH_COMMAND git apply --ignore-whitespace "${CMAKE_CURRENT_LIST_DIR}/h5pl.patch" || true
   GIT_REPOSITORY https://github.com/HDFGroup/hdf5_plugins
   GIT_TAG 1.14.0
 )
