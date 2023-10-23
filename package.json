@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/h5wasm/h5wasm-plugins/issues"
   },
-  "homepage": "https://github.com/h5wasm/h5wasm-plugins#readme"
+  "homepage": "https://github.com/h5wasm/h5wasm-plugins#readme",
+  "dependencies": {
+    "h5wasm": "file:../h5wasm/h5wasm-0.6.3.tgz"
+  }
 }

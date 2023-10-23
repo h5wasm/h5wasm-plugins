@@ -64,6 +64,7 @@ set (BZ2_PACKAGE_NAME "BZ2")
 set (ENABLE_JPEG ON)
 set (JPEG_TGZ_NAME "jpegsrc.v9e.tar.gz")
 set (JPEG_PACKAGE_NAME "JPEG")
+# set (BUILD_LZ4_LIBRARY_SOURCE OFF CACHE BOOL "" FORCE)
 set (ENABLE_LZ4 ON CACHE BOOL "" FORCE)
 set (LZ4_TGZ_NAME "lz4-1.9.4.tar.gz")
 set (LZ4_PACKAGE_NAME "LZ4")
@@ -99,7 +100,7 @@ function(build_shared_plugin base_name plugin_libs plugin_depends external_libs)
   set(_plugin_name "libH5Z${base_name}.so")
   add_custom_target(h5${base_name}_shared ALL 
     COMMAND 
-      ${CMAKE_C_COMPILER} -s SIDE_MODULE=1 ${plugin_libs} ${external_libs} -o ${_plugin_name}
+      ${CMAKE_C_COMPILER} -s SIDE_MODULE=1 -gsource-map ${plugin_libs} ${external_libs} -o ${_plugin_name}
     DEPENDS ${plugin_depends}
   )
   install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${_plugin_name} DESTINATION ${PLUGIN_DIR})
@@ -109,8 +110,8 @@ build_shared_plugin(bz2 "libh5bz2.a;libbz2.a" "h5bz2;bz2-static" "")
 build_shared_plugin(bshuf "libh5bshuf.a" "h5bshuf" "")
 build_shared_plugin(zstd "libh5zstd.a;libzstd.a" "h5zstd;libzstd_static" "")
 build_shared_plugin(lz4 "libh5lz4.a" "h5lz4" "")
-build_shared_plugin(lzf "libh5lzf.a" "h5lzf;lzf-static" "")
-build_shared_plugin(szf "libh5sz.a;libzstd.a" "h5sz;libzstd_static" "libz.a")
+build_shared_plugin(lzf "libh5lzf.a;liblzf.a" "h5lzf;SZ;lzf-static" "")
+build_shared_plugin(szf "libh5sz.a;libSZ.a;libzstd.a" "h5sz;libzstd_static" "libz.a")
 build_shared_plugin(zfp "libh5zfp.a;libzfp.a" "h5zfp;zfp" "")
 build_shared_plugin(jpeg "libh5jpeg.a;libjpeg.a" "h5jpeg;jpeg-static" "")
 build_shared_plugin(blosc "libh5blosc.a;libblosc.a" "h5blosc;blosc_static" "")

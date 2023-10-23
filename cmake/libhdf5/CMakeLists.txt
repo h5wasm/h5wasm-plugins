@@ -48,6 +48,7 @@ project(libhdf5-wasm-build)
 
 set (BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 option(BUILD_SHARED_LIBS "Build shared libs" OFF)
+option(HDF5_ENABLE_THREADSAFE ON)
 option(HDF5_BUILD_EXAMPLES "Build Examples" OFF)
 option(HDF5_BUILD_TOOLS "Build Tools" ON)
 option(HDF5_BUILD_UTILS "Build Utils" OFF)

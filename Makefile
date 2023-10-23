@@ -30,7 +30,7 @@ $(SZIP_LIBRARY):
 szip: $(SZIP_LIBRARY)
 
 PLUGINS: $(HDF5_LIBRARY)
-	emcmake cmake -DCMAKE_INSTALL_PREFIX=$(PLUGINS_INSTALL_PREFIX) -S cmake/h5pl -B build/h5pl;
+	emcmake cmake -DCMAKE_INSTALL_PREFIX=$(INSTALL_PREFIX) -S cmake/h5pl -B build/h5pl;
 	cmake --build build/h5pl;
 	cmake --install build/h5pl;
 
