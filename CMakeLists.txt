@@ -2,9 +2,7 @@ cmake_minimum_required(VERSION 3.24)
 project (H5WASM_PLUGINS C)
 include(FetchContent)
 
-# get grandparent path
-cmake_path(GET CMAKE_CURRENT_SOURCE_DIR PARENT_PATH base_path)
-cmake_path(GET base_path PARENT_PATH base_path)
+set(base_path ${CMAKE_SOURCE_DIR})
 
 set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_EXE_LINKER_FLAGS_INIT "-sNODERAWFS=1 -sFORCE_FILESYSTEM=1 -sSINGLE_FILE=1 --extern-pre-js=${base_path}/shebang.txt" CACHE INTERNAL "")
@@ -15,6 +13,20 @@ message(STATUS "CMAKE_MODULE_PATH: ${CMAKE_MODULE_PATH}")
 list(APPEND CMAKE_MODULE_PATH "${base_path}/dist")
 message(STATUS "CMAKE_MODULE_PATH: ${CMAKE_MODULE_PATH}")
 
+set (BASE_URL "https://github.com/usnistgov/libhdf5-wasm/releases/download/v0.4.2_3.1.43" CACHE STRING "")
+# set (BASE_URL "$ENV{HOME}/dev/libhdf5-wasm" CACHE STRING "")
+
+FetchContent_Declare(
+  libhdf5-wasm
+  URL ${BASE_URL}/HDF5-1.14.2-Emscripten.tar.gz
+  URL_HASH SHA256=af86c8fc16d07b37a3c7f17bd16895379f63f779796fb3db46758d67d5f8384e
+)
+if (NOT libhdf5-wasm_POPULATED)
+  FetchContent_MakeAvailable(libhdf5-wasm)
+endif()
+
+set(HDF5_DIR ${libhdf5-wasm_SOURCE_DIR}/cmake)
+find_package(HDF5 REQUIRED CONFIG)
 
 FetchContent_Declare(
   h5pl
@@ -30,16 +42,12 @@ if(NOT h5pl_POPULATED)
 endif()
 # include(${h5pl_SOURCE_DIR}/config/cmake/cacheinit.cmake)
 
-
-set (HDF5_ROOT ${base_path}/dist)
-set (ZLIB_ROOT ${base_path}/dist)
-set (ZLIB_DIR ${base_path}/dist CACHE STRING "" FORCE)
+set(ZLIB_DIR ${libhdf5-wasm_SOURCE_DIR})
+set(ZLIB_ROOT ${libhdf5-wasm_SOURCE_DIR})
 set (ZLIB_INCLUDE_DIR ${ZLIB_DIR}/include CACHE STRING "" FORCE)
 set (ZLIB_LIBRARY ${ZLIB_DIR}/lib/libz.a CACHE STRING "" FORCE)
-include_directories(${ZLIB_INCLUDE_DIR})
-
 message(STATUS "ZLIB_DIR: ${ZLIB_DIR}")
-set (HDF5_DIR ${base_path}/dist/cmake)
+
 find_package(HDF5 REQUIRED CONFIG)
 find_package(ZLIB REQUIRED MODULE)
 # message(STATUS "ZLIB_FOUND: ${ZLIB_FOUND}, ${ZLIB_DIR}")
@@ -64,7 +72,6 @@ set (BZ2_PACKAGE_NAME "BZ2")
 set (ENABLE_JPEG ON)
 set (JPEG_TGZ_NAME "jpegsrc.v9e.tar.gz")
 set (JPEG_PACKAGE_NAME "JPEG")
-# set (BUILD_LZ4_LIBRARY_SOURCE OFF CACHE BOOL "" FORCE)
 set (ENABLE_LZ4 ON CACHE BOOL "" FORCE)
 set (LZ4_TGZ_NAME "lz4-1.9.4.tar.gz")
 set (LZ4_PACKAGE_NAME "LZ4")
@@ -83,12 +90,6 @@ set (ZSTD_TGZ_NAME "zstd-1.5.5.tar.gz")
 set (ZSTD_PACKAGE_NAME "ZSTD")
 
 # option(TGZPATH "where to get zipped libraries" ${h5pl_SOURCE_DIR}/libs)
-# option(ENABLE_BLOSC "enable blosc" ON)
-# option(ENABLE_BSHUF "enable bshuf" ON)
-# option(ENABLE_BZIP2 "enable bzip2" ON)
-
-# message(STATUS "LIBS: ${TGZPATH}")
-
 add_subdirectory(${h5pl_SOURCE_DIR} ${h5pl_BINARY_DIR})
 
 set(PLUGIN_DIR ${base_path}/plugins CACHE PATH "")
@@ -96,7 +97,7 @@ message(STATUS "PLUGIN_DIR: ${PLUGIN_DIR}")
 
 function(build_shared_plugin base_name plugin_libs plugin_depends external_libs)
   list(TRANSFORM plugin_libs PREPEND ${h5pl_BINARY_DIR}/bin/)
-  list(TRANSFORM external_libs PREPEND ${base_path}/dist/lib/)
+  # list(TRANSFORM external_libs PREPEND ${base_path}/dist/lib/)
   set(_plugin_name "libH5Z${base_name}.so")
   add_custom_target(h5${base_name}_shared ALL 
     COMMAND 
@@ -111,7 +112,7 @@ build_shared_plugin(bshuf "libh5bshuf.a" "h5bshuf" "")
 build_shared_plugin(zstd "libh5zstd.a;libzstd.a" "h5zstd;libzstd_static" "")
 build_shared_plugin(lz4 "libh5lz4.a" "h5lz4" "")
 build_shared_plugin(lzf "libh5lzf.a;liblzf.a" "h5lzf;SZ;lzf-static" "")
-build_shared_plugin(szf "libh5sz.a;libSZ.a;libzstd.a" "h5sz;libzstd_static" "libz.a")
+build_shared_plugin(szf "libh5sz.a;libSZ.a;libzstd.a" "h5sz;libzstd_static" "${ZLIB_LIBRARY}")
 build_shared_plugin(zfp "libh5zfp.a;libzfp.a" "h5zfp;zfp" "")
 build_shared_plugin(jpeg "libh5jpeg.a;libjpeg.a" "h5jpeg;jpeg-static" "")
 build_shared_plugin(blosc "libh5blosc.a;libblosc.a" "h5blosc;blosc_static" "")
