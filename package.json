@@ -23,7 +23,7 @@
     "url": "https://github.com/h5wasm/h5wasm-plugins/issues"
   },
   "homepage": "https://github.com/h5wasm/h5wasm-plugins#readme",
-  "dependencies": {
+  "devDependencies": {
     "h5wasm": "^0.6.6"
   }
 }
