@@ -18,6 +18,8 @@ _(h5wasm is a javascript/webassembly library for reading and writing HDF5 files 
  - zfp
  - zstd
 
+(Note that `gzip` and `szip` filters are built-in to h5wasm and don't require a plugin)
+
 ## Usage: browser
 The default export from h5wasm (which has a `Module` property defined, for accessing the C-module directly) should be passed to the functions defined here.
 
@@ -26,7 +28,7 @@ import h5wasm from "h5wasm";
 import { plugin_names, install_plugins } from "h5wasm-plugins";
 
 await h5wasm.ready;
-// installs libH5zfp.so to default folder, /usr/local/hdf5/lib/plugin
+// installs libH5Zzfp.so to default folder, /usr/local/hdf5/lib/plugin
 install_plugins(h5wasm, ["zfp"]);
 
 // Or, to install all plugins to new folder /tmp/h5plugins
