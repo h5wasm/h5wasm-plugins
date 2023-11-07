@@ -2,6 +2,7 @@ const index_url = import.meta.url;
 export const base_url = index_url.replace(/\/index\.mjs$/, '');
 
 export const plugin_names = [
+    "bshuf",
     "blosc",
     "bz2",
     "lz4",
@@ -19,7 +20,7 @@ export async function install_plugins(h5wasm, names=plugin_names, new_plugin_pat
     h5wasm.FS.mkdirTree(plugin_path);
 
 
-    for (const plugin_name of plugin_names) {
+    for (const plugin_name of names) {
         const plugin_filename = `libH5Z${plugin_name}.so`;
         const r = await fetch(`${base_url}/plugins/${plugin_filename}`);
         const buf = await r.arrayBuffer();
