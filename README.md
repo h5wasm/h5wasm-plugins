@@ -11,6 +11,7 @@ _(h5wasm is a javascript/webassembly library for reading and writing HDF5 files 
 
 ## Included plugins
  - blosc
+ - bshuf
  - bz2
  - lz4
  - lzf
