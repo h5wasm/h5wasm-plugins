@@ -84,3 +84,11 @@ h5wasm.Module.get_plugin_search_paths()
 //   '/usr/local/hdf5/lib/plugin'
 // ]
 ```
+
+## Building from source
+Dependencies:
+ 1. cmake >= 3.24
+ 2. make
+ 3. emscripten, preferably version 3.1.43
+
+run `make` to build the plugins to the `plugins` folder locally.
