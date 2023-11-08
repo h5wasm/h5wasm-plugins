@@ -2,6 +2,9 @@
 
 A collection of pre-compiled compression plugins to be used with [h5wasm](https://github.com/usnistgov/h5wasm)
 
+The plugins are built using sources fetched at build-time from https://github.com/HDFGroup/hdf5_plugins 
+(if new plugins are desired, it is recommended to get them upstreamed to that repository so they can be built here)
+
 _(h5wasm is a javascript/webassembly library for reading and writing HDF5 files from the browser or node.js or deno or...)_
 
 ## Installation
