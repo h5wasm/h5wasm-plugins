@@ -1,6 +1,6 @@
 {
   "name": "h5wasm-plugins",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "compression plugins for h5wasm",
   "main": "index.mjs",
   "scripts": {
