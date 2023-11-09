@@ -24,6 +24,6 @@
   },
   "homepage": "https://github.com/h5wasm/h5wasm-plugins#readme",
   "dependencies": {
-    "h5wasm": "^0.6.7"
+    "h5wasm": "^0.6.10"
   }
 }
