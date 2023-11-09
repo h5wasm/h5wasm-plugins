@@ -2,6 +2,8 @@
 ## v0.0.3 2023-11-09
 ### Added
  - now building and including `blosc2` filter
+### Changed
+ - uses h5wasm >= 0.6.10 (for new symbols used by `blosc2`
 ## v0.0.2 2023-11-07
 ### Fixed
  - added `-sWASM_BIGINT` flag to compilation/linking of final plugin, fixes issue #3
