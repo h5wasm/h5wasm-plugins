@@ -1,4 +1,7 @@
 # Changelog
+## v0.0.3 2023-11-09
+### Added
+ - now building and including `blosc2` filter
 ## v0.0.2 2023-11-07
 ### Fixed
  - added `-sWASM_BIGINT` flag to compilation/linking of final plugin, fixes issue #3
