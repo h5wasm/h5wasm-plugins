@@ -4,6 +4,7 @@ export const base_url = index_url.replace(/\/index\.mjs$/, '');
 export const plugin_names = [
     "bshuf",
     "blosc",
+    "blosc2",
     "bz2",
     "lz4",
     "lzf",

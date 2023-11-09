@@ -1,5 +1,8 @@
+cmake_policy(SET CMP0079 NEW)
 cmake_minimum_required(VERSION 3.24)
+
 project (H5WASM_PLUGINS C)
+
 include(FetchContent)
 
 set(base_path ${CMAKE_SOURCE_DIR})
@@ -47,6 +50,7 @@ set(ZLIB_ROOT ${libhdf5-wasm_SOURCE_DIR})
 set (ZLIB_INCLUDE_DIR ${ZLIB_DIR}/include CACHE STRING "" FORCE)
 set (ZLIB_LIBRARY ${ZLIB_DIR}/lib/libz.a CACHE STRING "" FORCE)
 message(STATUS "ZLIB_DIR: ${ZLIB_DIR}")
+
 
 find_package(HDF5 REQUIRED CONFIG)
 find_package(ZLIB REQUIRED MODULE)
@@ -116,3 +120,32 @@ build_shared_plugin(szf "libh5sz.a;libSZ.a;libzstd.a" "h5sz;libzstd_static" "${Z
 build_shared_plugin(zfp "libh5zfp.a;libzfp.a" "h5zfp;zfp" "")
 # build_shared_plugin(jpeg "libh5jpeg.a;libjpeg.a" "h5jpeg;jpeg-static" "")
 build_shared_plugin(blosc "libh5blosc.a;libblosc.a" "h5blosc;blosc_static" "")
+
+FetchContent_Declare(
+  blosc2
+  GIT_REPOSITORY https://github.com/Blosc/c-blosc2
+  GIT_TAG v2.11.2
+)
+option(DDEACTIVATE_AVX512 "" ON)
+option(DDEACTIVATE_AVX2 "" ON)
+set(ARCH "Emscripten")
+option(PREFER_EXTERNAL_ZLIB "" ON)
+option(PREFER_EXTERNAL_ZSTD "" ON)
+option(PREFER_EXTERNAL_LZ4 "" ON)
+FetchContent_MakeAvailable(blosc2)
+
+FetchContent_Declare (
+  blosc2-filter
+  GIT_REPOSITORY https://github.com/PyTables/PyTables
+  GIT_TAG v3.9.1
+)
+FetchContent_Populate(blosc2-filter)
+
+add_library(h5blosc2 STATIC 
+"${blosc2-filter_SOURCE_DIR}/hdf5-blosc2/src/blosc2_plugin.c"
+"${blosc2-filter_SOURCE_DIR}/hdf5-blosc2/src/blosc2_filter.c"
+)
+target_link_libraries(h5blosc2 PRIVATE blosc2_static)
+target_include_directories(h5blosc2 PRIVATE "${libhdf5-wasm_SOURCE_DIR}/include" "${blosc2_SOURCE_DIR}/include")
+
+build_shared_plugin(blosc2 "libh5blosc2.a;libblosc2.a" "h5blosc2;blosc2_static" "")
