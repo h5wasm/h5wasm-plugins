@@ -32,6 +32,27 @@ set(HDF5_DIR ${libhdf5-wasm_SOURCE_DIR}/cmake)
 find_package(HDF5 REQUIRED CONFIG)
 
 FetchContent_Declare(
+  zstd
+  GIT_REPOSITORY https://github.com/facebook/zstd
+  SOURCE_SUBDIR  build/cmake
+  GIT_TAG v1.5.5
+)
+
+set(ZSTD_BUILD_TESTS OFF CACHE INTERNAL "")
+set(ZSTD_MULTITHREAD_SUPPORT OFF CACHE INTERNAL "")
+set(ZSTD_BUILD_PROGRAMS OFF CACHE INTERNAL "")
+set(ZSTD_BUILD_TESTS OFF CACHE INTERNAL "")
+set(ZSTD_BUILD_SHARED OFF CACHE INTERNAL "")
+set(ZSTD_BUILD_STATIC ON CACHE INTERNAL "")
+
+FetchContent_GetProperties(zstd)
+if(NOT zstd_POPULATED)
+  FetchContent_Populate(zstd)
+  add_subdirectory(${zstd_SOURCE_DIR}/build/cmake ${zstd_BINARY_DIR} EXCLUDE_FROM_ALL)
+  include_directories(${zstd_SOURCE_DIR}/lib)
+endif()
+
+FetchContent_Declare(
   h5pl
   PATCH_COMMAND git apply --ignore-whitespace "${base_path}/h5pl.patch" || true
   # PATCH_COMMAND git apply --ignore-whitespace "${base_path}/h5pl.patch"
@@ -51,6 +72,7 @@ set (ZLIB_INCLUDE_DIR ${ZLIB_DIR}/include CACHE STRING "" FORCE)
 set (ZLIB_LIBRARY ${ZLIB_DIR}/lib/libz.a CACHE STRING "" FORCE)
 message(STATUS "ZLIB_DIR: ${ZLIB_DIR}")
 
+set (ZSTD_LIBRARY "${zstd_BINARY_DIR}/lib/libzstd.a")
 
 find_package(HDF5 REQUIRED CONFIG)
 find_package(ZLIB REQUIRED MODULE)
@@ -113,10 +135,10 @@ endfunction()
 
 build_shared_plugin(bz2 "libh5bz2.a;libbz2.a" "h5bz2;bz2-static" "")
 build_shared_plugin(bshuf "libh5bshuf.a" "h5bshuf" "")
-build_shared_plugin(zstd "libh5zstd.a;libzstd.a" "h5zstd;libzstd_static" "")
+build_shared_plugin(zstd "libh5zstd.a" "h5zstd;libzstd_static" "${ZSTD_LIBRARY}")
 build_shared_plugin(lz4 "libh5lz4.a" "h5lz4" "")
 build_shared_plugin(lzf "libh5lzf.a;liblzf.a" "h5lzf;SZ;lzf-static" "")
-build_shared_plugin(szf "libh5sz.a;libSZ.a;libzstd.a" "h5sz;libzstd_static" "${ZLIB_LIBRARY}")
+build_shared_plugin(szf "libh5sz.a;libSZ.a" "h5sz;libzstd_static" "${ZLIB_LIBRARY};${ZSTD_LIBRARY}")
 build_shared_plugin(zfp "libh5zfp.a;libzfp.a" "h5zfp;zfp" "")
 # build_shared_plugin(jpeg "libh5jpeg.a;libjpeg.a" "h5jpeg;jpeg-static" "")
 build_shared_plugin(blosc "libh5blosc.a;libblosc.a" "h5blosc;blosc_static" "")
