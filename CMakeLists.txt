@@ -72,6 +72,9 @@ set (ZLIB_INCLUDE_DIR ${ZLIB_DIR}/include CACHE STRING "" FORCE)
 set (ZLIB_LIBRARY ${ZLIB_DIR}/lib/libz.a CACHE STRING "" FORCE)
 message(STATUS "ZLIB_DIR: ${ZLIB_DIR}")
 
+# the SZF library uses pkg_search_module to find zstd... with older pkg-config
+# it seems to need help finding it:
+set(ENV{PKG_CONFIG_PATH} "${zstd_BINARY_DIR}/lib")
 set (ZSTD_LIBRARY "${zstd_BINARY_DIR}/lib/libzstd.a")
 
 find_package(HDF5 REQUIRED CONFIG)
