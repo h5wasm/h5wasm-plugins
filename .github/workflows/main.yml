@@ -27,7 +27,6 @@ jobs:
         run: |
           emcc --version;
           cmake --version;
-          mkdir -p dist/include;
           make;
       - uses: actions/upload-artifact@v4
         with:
