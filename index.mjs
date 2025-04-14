@@ -6,9 +6,9 @@ export const plugin_names = [
     "blosc",
     "blosc2",
     "bz2",
+    "jpeg",
     "lz4",
     "lzf",
-    "szf",
     "zfp",
     "zstd",
 ]
