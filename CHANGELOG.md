@@ -1,4 +1,10 @@
 # Changelog
+## v0.1.0 2025-04-14
+### Added
+ - JPEG filter
+### Changed
+ - Requires `h5wasm>=0.8.1`
+ - SZ filter disabled
 ## v0.0.3 2023-11-09
 ### Added
  - now building and including `blosc2` filter
