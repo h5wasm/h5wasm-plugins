@@ -16,13 +16,13 @@ message(STATUS "CMAKE_MODULE_PATH: ${CMAKE_MODULE_PATH}")
 list(APPEND CMAKE_MODULE_PATH "${base_path}/dist")
 message(STATUS "CMAKE_MODULE_PATH: ${CMAKE_MODULE_PATH}")
 
-set (BASE_URL "https://github.com/usnistgov/libhdf5-wasm/releases/download/v0.4.2_3.1.43" CACHE STRING "")
+set (BASE_URL "https://github.com/usnistgov/libhdf5-wasm/releases/download/v0.4.6_3.1.68" CACHE STRING "")
 # set (BASE_URL "$ENV{HOME}/dev/libhdf5-wasm" CACHE STRING "")
 
 FetchContent_Declare(
   libhdf5-wasm
-  URL ${BASE_URL}/HDF5-1.14.2-Emscripten.tar.gz
-  URL_HASH SHA256=af86c8fc16d07b37a3c7f17bd16895379f63f779796fb3db46758d67d5f8384e
+  URL ${BASE_URL}/HDF5-1.14.6-Emscripten.tar.gz
+  URL_HASH SHA256=0c5de36a3c81e3854e57593c55274d89a43db3f8a7bbe6a0d9d5c560e9c222b1
 )
 if (NOT libhdf5-wasm_POPULATED)
   FetchContent_MakeAvailable(libhdf5-wasm)
@@ -57,7 +57,7 @@ FetchContent_Declare(
   PATCH_COMMAND git apply --ignore-whitespace "${base_path}/h5pl.patch" || true
   # PATCH_COMMAND git apply --ignore-whitespace "${base_path}/h5pl.patch"
   GIT_REPOSITORY https://github.com/HDFGroup/hdf5_plugins
-  GIT_TAG  b416b245c949b4cb5647b0fa19989a61f28a3edc
+  GIT_TAG  hdf5-1.14.6
 )
 if(NOT h5pl_POPULATED)
   FetchContent_Populate(
