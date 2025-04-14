@@ -91,7 +91,9 @@ add_definitions(-DHAVE_ARPA_INET_H)
 set (H5PL_ALLOW_EXTERNAL_SUPPORT "TGZ" CACHE STRING "Allow External Library Building (NO GIT TGZ)" FORCE)
 option (ENABLE_BLOSC "blosc" ON)
 set (BLOSC_PACKAGE_NAME "BLOSC")
-set (BLOSC_TGZ_NAME "c-blosc-1.21.5.tar.gz")
+option (ENABLE_BLOSC2 "blosc2" ON)
+set (BLOSC2_TGZ_NAME "c-blosc2-2.15.2.tar.gz")
+set (BLOSC2_PACKAGE_NAME "BLOSC2")
 option (ENABLE_BSHUF "bshuf" ON)
 set (BSHUF_TGZ_NAME "bitshuffle-0.5.1.tar.gz")
 set (BSHUF_PACKAGE_NAME "BSHUF")
@@ -145,32 +147,4 @@ build_shared_plugin(szf "libh5sz.a;libSZ.a" "h5sz;libzstd_static" "${ZLIB_LIBRAR
 build_shared_plugin(zfp "libh5zfp.a;libzfp.a" "h5zfp;zfp" "")
 # build_shared_plugin(jpeg "libh5jpeg.a;libjpeg.a" "h5jpeg;jpeg-static" "")
 build_shared_plugin(blosc "libh5blosc.a;libblosc.a" "h5blosc;blosc_static" "")
-
-FetchContent_Declare(
-  blosc2
-  GIT_REPOSITORY https://github.com/Blosc/c-blosc2
-  GIT_TAG v2.11.2
-)
-option(DDEACTIVATE_AVX512 "" ON)
-option(DDEACTIVATE_AVX2 "" ON)
-set(ARCH "Emscripten")
-option(PREFER_EXTERNAL_ZLIB "" ON)
-option(PREFER_EXTERNAL_ZSTD "" ON)
-option(PREFER_EXTERNAL_LZ4 "" ON)
-FetchContent_MakeAvailable(blosc2)
-
-FetchContent_Declare (
-  blosc2-filter
-  GIT_REPOSITORY https://github.com/PyTables/PyTables
-  GIT_TAG v3.9.1
-)
-FetchContent_Populate(blosc2-filter)
-
-add_library(h5blosc2 STATIC 
-"${blosc2-filter_SOURCE_DIR}/hdf5-blosc2/src/blosc2_plugin.c"
-"${blosc2-filter_SOURCE_DIR}/hdf5-blosc2/src/blosc2_filter.c"
-)
-target_link_libraries(h5blosc2 PRIVATE blosc2_static)
-target_include_directories(h5blosc2 PRIVATE "${libhdf5-wasm_SOURCE_DIR}/include" "${blosc2_SOURCE_DIR}/include")
-
 build_shared_plugin(blosc2 "libh5blosc2.a;libblosc2.a" "h5blosc2;blosc2_static" "")
