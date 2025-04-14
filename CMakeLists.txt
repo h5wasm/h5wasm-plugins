@@ -35,7 +35,7 @@ FetchContent_Declare(
   zstd
   GIT_REPOSITORY https://github.com/facebook/zstd
   SOURCE_SUBDIR  build/cmake
-  GIT_TAG v1.5.5
+  GIT_TAG v1.5.6
 )
 
 set(ZSTD_BUILD_TESTS OFF CACHE INTERNAL "")
