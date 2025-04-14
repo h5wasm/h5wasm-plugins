@@ -135,7 +135,7 @@ function(build_shared_plugin base_name plugin_libs plugin_depends external_libs)
   set(_plugin_name "libH5Z${base_name}.so")
   add_custom_target(h5${base_name}_shared ALL 
     COMMAND 
-      ${CMAKE_C_COMPILER} -sSIDE_MODULE=1 -sWASM_BIGINT ${plugin_libs} ${external_libs} -o ${_plugin_name}
+      ${CMAKE_C_COMPILER} -sSIDE_MODULE=1 -sWASM_BIGINT -sSUPPORT_LONGJMP=emscripten ${plugin_libs} ${external_libs} -o ${_plugin_name}
     DEPENDS ${plugin_depends}
   )
   install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${_plugin_name} DESTINATION ${PLUGIN_DIR})
