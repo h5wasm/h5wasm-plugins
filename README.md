@@ -10,16 +10,16 @@ _(h5wasm is a javascript/webassembly library for reading and writing HDF5 files 
 ## Installation
 `npm install h5wasm-plugins`
 
-(this will also install h5wasm >= 0.6.7)
+(this will also install h5wasm >= 0.8.1)
 
 ## Included plugins
  - blosc
  - blosc2
  - bshuf
  - bz2
+ - jpeg
  - lz4
  - lzf
- - szf
  - zfp
  - zstd
 
