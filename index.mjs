@@ -1,3 +1,11 @@
+// To use these functions, first import h5wasm
+// then get the module with:
+// import h5wasm from 'h5wasm'; // or 'h5wasm/node' for nodejs
+// const h5wasm_module = await h5wasm.ready();
+//
+// import plugin_helpers from 'h5wasm-plugins';
+// plugin_helpers.list_plugins(h5wasm_module);
+
 const index_url = import.meta.url;
 export const base_url = index_url.replace(/\/index\.mjs$/, '');
 
