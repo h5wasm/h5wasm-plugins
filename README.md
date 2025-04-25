@@ -32,12 +32,12 @@ The default export from h5wasm (which has a `Module` property defined, for acces
 import h5wasm from "h5wasm";
 import { plugin_names, install_plugins } from "h5wasm-plugins";
 
-await h5wasm.ready;
+const h5wasm_module = await h5wasm.ready;
 // installs libH5Zzfp.so to default folder, /usr/local/hdf5/lib/plugin
-install_plugins(h5wasm, ["zfp"]);
+install_plugins(h5wasm_module, ["zfp"]);
 
 // Or, to install all plugins to new folder /tmp/h5plugins
-// install_plugins(h5wasm, plugin_names, "/tmp/h5plugins");
+// install_plugins(h5wasm_module, plugin_names, "/tmp/h5plugins");
 
 // open existing file - see h5wasm docs for writing files to
 // virtual Emscripten filesystem
@@ -47,13 +47,13 @@ const data = f.get("zfp_data").value;
 
 ## Usage: server side (e.g. nodejs)
 ```js
-const h5wasm = await import("h5wasm");
+const h5wasm = await import("h5wasm/node");
 const h5wasm_plugins = await import("h5wasm-plugins");
 
-await h5wasm.ready;
+const h5wasm_module = await h5wasm.ready;
 // this inserts the node_modules/h5wasm-plugins/plugins path
 // at the start of the HDF5 plugin search paths
-h5wasm_plugins.install_local_plugins(h5wasm);
+h5wasm_plugins.install_local_plugins(h5wasm_module);
 
 const f = new h5wasm.File('./test_zfp.h5', 'r');
 // File {
@@ -90,6 +90,6 @@ h5wasm.Module.get_plugin_search_paths()
 Dependencies:
  1. cmake >= 3.24
  2. make
- 3. emscripten, preferably version 3.1.43
+ 3. emscripten, preferably version 3.1.68
 
 run `make` to build the plugins to the `plugins` folder locally.
