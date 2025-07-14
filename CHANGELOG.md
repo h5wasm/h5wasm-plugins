@@ -4,6 +4,8 @@
  - Documentation for use - pass `Module` object to helper functions
 ### Added
  - ZSTD support in `bshuf` filter
+### Changed
+ - requires `h5wasm>=0.8.3` (for `bshuf` filters)
 ## v0.1.0 2025-04-14
 ### Added
  - JPEG filter
