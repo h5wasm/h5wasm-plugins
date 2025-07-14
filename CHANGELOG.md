@@ -1,4 +1,9 @@
 # Changelog
+## v0.1.1 2025-07-14
+### Fixed
+ - Documentation for use - pass `Module` object to helper functions
+### Added
+ - ZSTD support in `bshuf` filter
 ## v0.1.0 2025-04-14
 ### Added
  - JPEG filter
