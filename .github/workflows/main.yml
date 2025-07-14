@@ -22,7 +22,7 @@ jobs:
           actions-cache-folder: ${{env.EM_CACHE_FOLDER}}
       - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 22
       - name: Build library
         run: |
           emcc --version;
