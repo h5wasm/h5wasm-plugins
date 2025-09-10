@@ -18,15 +18,15 @@ for filt in hdf5plugin.get_filters():
         continue
 
     with h5py.File(destdir / f"test_{filter_name}.h5", 'w') as root:
-        root.create_dataset('data', data=list(range(10)), dtype='<f4', **filt())
+        root.create_dataset('data', data=list(range(10000)), dtype='<f4', **filt())
         root['data'].attrs['filter'] = filter_name
 
 
 with h5py.File("test_filters.h5", "w") as root:
-    root.create_dataset('gzip', data=list(range(20)), dtype='<f4', compression='gzip', compression_opts=4)
-    root.create_dataset('szip', data=list(range(20)), dtype='<f4', compression='szip')
+    root.create_dataset('gzip', data=list(range(20000)), dtype='<f4', compression='gzip', compression_opts=4)
+    root.create_dataset('szip', data=list(range(20000)), dtype='<f4', compression='szip')
     for filt in hdf5plugin.get_filters():
         if filt.filter_name == 'sz':
             continue
-        root.create_dataset(filt.filter_name, data=list(range(20)), dtype='<f4', **filt())
+        root.create_dataset(filt.filter_name, data=list(range(20000)), dtype='<f4', **filt())
         root.flush()
