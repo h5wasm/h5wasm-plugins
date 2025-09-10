@@ -1,7 +1,7 @@
 import h5py, hdf5plugin
 from pathlib import Path
 
-destdir = Path('./test_files')
+destdir = Path(__file__).parent / "test_files"
 destdir.mkdir(exist_ok=True)
 
 with h5py.File(destdir / "test_gzip.h5", 'w') as root:
