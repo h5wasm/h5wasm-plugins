@@ -1,4 +1,4 @@
-import * as h5wasm from '../../h5wasm/dist/node/hdf5_hl.js';
+import * as h5wasm from 'h5wasm/node';
 const module = await h5wasm.ready;
 
 import { install_plugins, plugin_names, install_local_plugins } from '../index.mjs';
@@ -6,7 +6,7 @@ await install_local_plugins(module);
 
 const TEST_PATH = './test/test_files';
 
-if (module.FS.isDir(TEST_PATH)) {
+if (module.FS.analyzePath(TEST_PATH).exists) {
   console.log("test_files directory exists");
 } else {
   module.FS.mkdir(TEST_PATH);
@@ -67,8 +67,6 @@ function make_bz2(level=2) {
   dset.create_attribute("filter", "bz2");
   f.close()
 }
-
-
 
 make_bz2();
 make_jpeg();
