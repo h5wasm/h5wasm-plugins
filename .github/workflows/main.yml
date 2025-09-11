@@ -41,7 +41,9 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: plugins
-          path: plugins/*
+          path: |
+            plugins
+            test/test_files
       - name: Make package
         run: npm pack
       - name: Update sid release assets and text
