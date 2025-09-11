@@ -11,7 +11,7 @@ import { argv } from 'process';
 
 const { FS } = await h5wasm.ready;
 
-const test_filenames = fs.readdirSync('./test/test_files');
+const test_filenames = argv.length > 2 ? [`test_${argv[2]}.h5`] : fs.readdirSync('./test/test_files');
 
 const tolerance = 1e-20;
 function validate_data(data) {
