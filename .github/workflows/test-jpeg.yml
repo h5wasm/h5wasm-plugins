@@ -1,6 +1,6 @@
 
 
-name: test jpeg
+name: jpeg
 on:
   workflow_run:
     workflows: ["build"]
@@ -12,20 +12,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Download plugins artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: plugins
-          path: plugins
-      - name: Show plugins
-        run: ls -l plugins
-
       - uses: actions/setup-node@v4
         with:
           node-version: 22
       - name: Install npm package
         run: |
           npm install
-      - name: Run jpeg test
+      - name: Download artifacts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          node test/test.mjs jpeg
+          curl -H "Authorization: Bearer $GITHUB_TOKEN" \
+            https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_EVENT_WORKFLOW_RUN_ID}/artifacts;
+          curl -H "Authorization: Bearer $GITHUB_TOKEN" \
+            https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_EVENT_WORKFLOW_RUN_ID}/artifacts \
+            | jq '.artifacts[] | .id' | xargs -I {} curl -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -L https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/{}/zip -o artifact.zip
+          unzip artifact.zip
+          ls -l
+      - name: Run plugin test
+        run: |
+          node test/test.mjs ${GITHUB_WORKFLOW}
