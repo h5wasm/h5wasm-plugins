@@ -1,0 +1,31 @@
+
+
+name: test jpeg
+on:
+  workflow_run:
+    workflows: ["build"]
+    types:
+      - completed
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download plugins artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: plugins
+          path: plugins
+      - name: Show plugins
+        run: ls -l plugins
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install npm package
+        run: |
+          npm install
+      - name: Run jpeg test
+        run: |
+          node test/test.mjs jpeg
