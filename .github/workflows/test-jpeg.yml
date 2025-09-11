@@ -34,4 +34,3 @@ jobs:
       - name: Run plugin test
         run: |
           node test/test.mjs ${GITHUB_WORKFLOW}
-`
