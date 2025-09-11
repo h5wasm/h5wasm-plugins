@@ -22,15 +22,15 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_EVENT_WORKFLOW_RUN_ID}/artifacts"
+          echo https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }}/artifacts
           curl -H "Authorization: Bearer $GITHUB_TOKEN" \
-            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_EVENT_WORKFLOW_RUN_ID}/artifacts"
+            https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }}/artifacts
           curl -H "Authorization: Bearer $GITHUB_TOKEN" \
-            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_EVENT_WORKFLOW_RUN_ID}/artifacts" \
+            https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.event.workflow_run.id }}/artifacts \
             | jq '.artifacts[] | .id' | xargs -I {} curl -H "Authorization: Bearer $GITHUB_TOKEN" \
-            -L "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/{}/zip" -o artifact.zip
+            -L https://api.github.com/repos/${{ github.repository }}/actions/artifacts/{}/zip -o artifact.zip
           unzip artifact.zip
           ls -l
       - name: Run plugin test
         run: |
-          node test/test.mjs ${GITHUB_WORKFLOW}
+          node test/test.mjs ${{ github.workflow }}
