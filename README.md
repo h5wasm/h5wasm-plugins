@@ -1,3 +1,15 @@
+
+[![blosc](https://github.com/bmaranville/h5wasm-plugins-tests/actions/workflows/test-blosc.yml/badge.svg)](https://github.com/bmaranville/h5wasm-plugins-tests/actions/workflows/test-blosc.yml)
+[![blosc2](https://github.com/bmaranville/h5wasm-plugins-tests/actions/workflows/test-blosc2.yml/badge.svg)](https://github.com/bmaranville/h5wasm-plugins-tests/actions/workflows/test-blosc2.yml)
+[![bshuf](https://github.com/bmaranville/h5wasm-plugins-tests/actions/workflows/test-bshuf.yml/badge.svg)](https://github.com/bmaranville/h5wasm-plugins-tests/actions/workflows/test-bshuf.yml)
+[![bz2](https://github.com/bmaranville/h5wasm-plugins-tests/actions/workflows/test-bz2.yml/badge.svg)](https://github.com/bmaranville/h5wasm-plugins-tests/actions/workflows/test-bz2.yml)
+[![lz4](https://github.com/bmaranville/h5wasm-plugins-tests/actions/workflows/test-lz4.yml/badge.svg)](https://github.com/bmaranville/h5wasm-plugins-tests/actions/workflows/test-lz4.yml)
+[![lzf](https://github.com/bmaranville/h5wasm-plugins-tests/actions/workflows/test-lzf.yml/badge.svg)](https://github.com/bmaranville/h5wasm-plugins-tests/actions/workflows/test-lzf.yml)
+[![zfp](https://github.com/bmaranville/h5wasm-plugins-tests/actions/workflows/test-zfp.yml/badge.svg)](https://github.com/bmaranville/h5wasm-plugins-tests/actions/workflows/test-zfp.yml)
+[![zstd](https://github.com/bmaranville/h5wasm-plugins-tests/actions/workflows/test-zstd.yml/badge.svg)](https://github.com/bmaranville/h5wasm-plugins-tests/actions/workflows/test-zstd.yml)
+[![jpeg](https://github.com/bmaranville/h5wasm-plugins-tests/actions/workflows/test-jpeg.yml/badge.svg)](https://github.com/bmaranville/h5wasm-plugins-tests/actions/workflows/test-jpeg.yml)
+
+
 # h5wasm-plugins
 
 A collection of pre-compiled compression plugins to be used with [h5wasm](https://github.com/usnistgov/h5wasm)
