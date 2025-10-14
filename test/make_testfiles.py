@@ -5,12 +5,16 @@ destdir = Path(__file__).parent / "test_files"
 destdir.mkdir(exist_ok=True)
 
 with h5py.File(destdir / "test_gzip.h5", 'w') as root:
-    root.create_dataset('data', data=list(range(10)), dtype='<f4', compression='gzip', compression_opts=4)
+    root.create_dataset('data', data=list(range(10000)), dtype='<f4', compression='gzip', compression_opts=4)
     root['data'].attrs['filter'] = 'gzip'
 
 with h5py.File(destdir / "test_szip.h5", 'w') as root:
-    root.create_dataset('data', data=list(range(10)), dtype='<f4', compression='szip')
+    root.create_dataset('data', data=list(range(10000)), dtype='<f4', compression='szip')
     root['data'].attrs['filter'] = 'szip'
+
+with h5py.File(destdir / "test_lzf.h5", 'w') as root:
+    root.create_dataset('data', data=list(range(10000)), dtype='<f4', compression='lzf')
+    root['data'].attrs['filter'] = 'lzf'
 
 for filt in hdf5plugin.get_filters():
     filter_name = filt.filter_name

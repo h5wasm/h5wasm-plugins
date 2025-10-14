@@ -57,7 +57,7 @@ FetchContent_Declare(
   PATCH_COMMAND git apply --ignore-whitespace "${base_path}/h5pl.patch" || true
   # PATCH_COMMAND git apply --ignore-whitespace "${base_path}/h5pl.patch"
   GIT_REPOSITORY https://github.com/HDFGroup/hdf5_plugins
-  GIT_TAG  hdf5-1.14.6
+  GIT_TAG  5d7fe9c156810c599537e53fb210d1f6a8481ed9
 )
 if(NOT h5pl_POPULATED)
   FetchContent_Populate(
@@ -150,7 +150,7 @@ endfunction()
 build_shared_plugin(bz2 "libh5bz2.a;libbz2.a" "h5bz2;bz2-static" "")
 build_shared_plugin(bshuf "libh5bshuf.a" "h5bshuf;libzstd_static" "${ZSTD_LIBRARY}")
 build_shared_plugin(zstd "libh5zstd.a" "h5zstd;libzstd_static" "${ZSTD_LIBRARY}")
-build_shared_plugin(lz4 "libh5lz4.a" "h5lz4" "")
+build_shared_plugin(lz4 "libh5lz4.a;liblz4.a" "h5lz4;lz4_static" "")
 build_shared_plugin(lzf "libh5lzf.a;liblzf.a" "h5lzf;lzf-static" "")
 # build_shared_plugin(szf "libh5sz.a;libSZ.a" "h5sz;libzstd_static" "${ZLIB_LIBRARY};${ZSTD_LIBRARY}")
 build_shared_plugin(zfp "libh5zfp.a;libzfp.a" "h5zfp;zfp" "")

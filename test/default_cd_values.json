@@ -1,0 +1,94 @@
+{
+    "bshuf": {
+        "compression": 32008,
+        "compression_opts": [
+            0,
+            2
+        ]
+    },
+    "blosc": {
+        "compression": 32001,
+        "compression_opts": [
+            0,
+            0,
+            0,
+            0,
+            5,
+            1,
+            1
+        ]
+    },
+    "blosc2": {
+        "compression": 32026,
+        "compression_opts": [
+            0,
+            0,
+            0,
+            0,
+            5,
+            1,
+            0
+        ]
+    },
+    "bzip2": {
+        "compression": 307,
+        "compression_opts": [
+            9
+        ]
+    },
+    "fcidecomp": {
+        "compression": 32018,
+        "compression_opts": []
+    },
+    "lz4": {
+        "compression": 32004,
+        "compression_opts": [
+            0
+        ]
+    },
+    "sperr": {
+        "compression": 32028,
+        "compression_opts": [
+            269484032,
+            0
+        ]
+    },
+    "sz": {
+        "compression": 32017,
+        "compression_opts": [
+            10,
+            0,
+            0,
+            0,
+            0,
+            1055193269,
+            2296604913,
+            0,
+            0
+        ]
+    },
+    "sz3": {
+        "compression": 32024,
+        "compression_opts": [
+            0,
+            1058682594,
+            3944497965,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        ]
+    },
+    "zfp": {
+        "compression": 32013,
+        "compression_opts": []
+    },
+    "zstd": {
+        "compression": 32015,
+        "compression_opts": [
+            3
+        ]
+    }
+}
