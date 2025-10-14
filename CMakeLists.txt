@@ -57,7 +57,7 @@ FetchContent_Declare(
   PATCH_COMMAND git apply --ignore-whitespace "${base_path}/h5pl.patch" || true
   # PATCH_COMMAND git apply --ignore-whitespace "${base_path}/h5pl.patch"
   GIT_REPOSITORY https://github.com/HDFGroup/hdf5_plugins
-  GIT_TAG  hdf5-1.14.6
+  GIT_TAG  5d7fe9c156810c599537e53fb210d1f6a8481ed9
 )
 if(NOT h5pl_POPULATED)
   FetchContent_Populate(
