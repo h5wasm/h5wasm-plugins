@@ -29,12 +29,6 @@ jobs:
           cmake --version;
           make;
           npm install;
-      - name: Install uv
-        uses: astral-sh/setup-uv@v6
-      - name: generate test files
-        run: |
-          uv run --python 3.13 --with h5py,hdf5plugin test/make_testfiles.py
-          node test/make_testfiles.mjs
       - name: Run tests
         run: |
           node test/test.mjs
