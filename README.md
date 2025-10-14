@@ -14,6 +14,8 @@
 
 A collection of pre-compiled compression plugins to be used with [h5wasm](https://github.com/usnistgov/h5wasm)
 
+These plugins can be used for reading and writing data (writing supported for all plugins as of version 0.2.0)
+
 The plugins are built using sources fetched at build-time from https://github.com/HDFGroup/hdf5_plugins 
 (if new plugins are desired, it is recommended to get them upstreamed to that repository so they can be built here)
 
@@ -55,6 +57,35 @@ install_plugins(h5wasm_module, ["zfp"]);
 // virtual Emscripten filesystem
 const f = new h5wasm.File("my_zfp.h5", "r");
 const data = f.get("zfp_data").value;
+```
+
+## Usage: writing a compressed dataset
+```js
+import h5wasm from "h5wasm";
+import { plugin_names, install_plugins } from "h5wasm-plugins";
+
+const h5wasm_module = await h5wasm.ready;
+install_plugins(h5wasm_module, ["lz4"]);
+
+const f = new h5wasm.File("my_lz4_data.h5", "w");
+// make some repeating data, that is very compressible:
+const data = [...new Array(100000)].map((_, i) => i % 64);
+// have to specify chunks, shape, compression, compression_opts
+const dset = f.create_dataset({
+    data: data,
+    dtype: '<f4', // 32-bit little-endian float
+    shape: [100,1000],
+    chunks: [10,100],
+    compression: 32004, // lz4 id
+    compression_opts: [
+        0
+    ]
+});
+f.close();
+
+console.log(`File size: ${h5wasm_module.FS.stat("my_lz4_data.h5").size}`);
+// File is only 45 kB
+
 ```
 
 ## Usage: server side (e.g. nodejs)
