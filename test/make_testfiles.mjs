@@ -1,7 +1,7 @@
 import * as h5wasm from 'h5wasm/node';
 const module = await h5wasm.ready;
 
-import { install_plugins, plugin_names, install_local_plugins } from '../index.mjs';
+import { install_local_plugins } from '../index.mjs';
 await install_local_plugins(module);
 
 const TEST_PATH = './test/test_files';
