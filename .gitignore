@@ -1,5 +1,7 @@
 build**
 dist**
+plugins**
+node_modules**
 emsdk-cache**
 h5wasm-plugins*.tgz
 *.h5

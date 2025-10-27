@@ -135,4 +135,20 @@ Dependencies:
  2. make
  3. emscripten, preferably version 3.1.68
 
-run `make` to build the plugins to the `plugins` folder locally.
+To build the plugins to the `plugins` folder locally, run:
+
+```bash
+make clean
+make plugins
+```
+
+## Testing
+```bash
+npm install
+
+python test/generate_default_cd_values.py
+python test/make_testfiles.py
+node test/make_testfiles.mjs
+
+node test/test.mjs
+```
