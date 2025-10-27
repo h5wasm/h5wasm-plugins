@@ -3,9 +3,6 @@
   "version": "0.2.0",
   "description": "compression plugins for h5wasm",
   "main": "index.mjs",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/h5wasm/h5wasm-plugins.git"
