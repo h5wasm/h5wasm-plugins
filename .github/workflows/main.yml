@@ -1,5 +1,12 @@
-name: "build"
-on: [push, workflow_dispatch]
+name: "build, test, and publish"
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  release:
+    types: [ published ]
+  workflow_dispatch:
 
 env:
   EM_VERSION: 4.0.23
@@ -20,9 +27,9 @@ jobs:
         with:
           version: ${{env.EM_VERSION}}
           actions-cache-folder: ${{env.EM_CACHE_FOLDER}}
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
       - name: Build library
         run: |
           emcc --version;
@@ -32,12 +39,16 @@ jobs:
       - name: Run tests
         run: |
           node test/test.mjs
-      - uses: actions/upload-artifact@v4
+      - name: Pack package
+        run: npm pack
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v7
         with:
           name: plugins
           path: |
             plugins
             test/test_files
+            *.tgz
       - name: Make package
         run: npm pack
       - name: Update sid release assets and text
@@ -81,3 +92,25 @@ jobs:
                 data: await fs.readFileSync(p)
               });
             }
+
+  publish:
+    needs: build_and_test
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+    - name: Download package artifact
+      uses: actions/download-artifact@v8
+      with:
+        name: plugins
+
+    - uses: actions/setup-node@v6
+      with:
+        node-version: '24'
+        registry-url: 'https://registry.npmjs.org'
+
+    - name: Publish to npm
+      run: npm publish *.tgz --provenance --access public
