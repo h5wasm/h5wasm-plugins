@@ -14,13 +14,13 @@ message(STATUS "CMAKE_MODULE_PATH: ${CMAKE_MODULE_PATH}")
 list(APPEND CMAKE_MODULE_PATH "${base_path}/dist")
 message(STATUS "CMAKE_MODULE_PATH: ${CMAKE_MODULE_PATH}")
 
-set (BASE_URL "https://github.com/usnistgov/libhdf5-wasm/releases/download/v0.5.0_3.1.68" CACHE STRING "")
+set (BASE_URL "https://github.com/usnistgov/libhdf5-wasm/releases/download/v0.6.0_4.0.23" CACHE STRING "")
 # set (BASE_URL "$ENV{HOME}/dev/libhdf5-wasm" CACHE STRING "")
 
 FetchContent_Declare(
   libhdf5-wasm
-  URL ${BASE_URL}/HDF5-1.14.6-Emscripten.tar.gz
-  URL_HASH SHA256=90c26256f3d1fd0b421b7e0defebe1894f179b2a50252aeb059aaa1fa6bdb7e9
+  URL ${BASE_URL}/HDF5-2.0.0-Emscripten.tar.gz
+  URL_HASH SHA256=d4dc6719ef164679728d9a50d6a4d97c826f563e22a40c4dec63e485b29781be
 )
 if (NOT libhdf5-wasm_POPULATED)
   FetchContent_MakeAvailable(libhdf5-wasm)

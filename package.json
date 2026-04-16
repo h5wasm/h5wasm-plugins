@@ -1,6 +1,6 @@
 {
   "name": "h5wasm-plugins",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "compression plugins for h5wasm",
   "main": "index.mjs",
   "scripts": {
@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/h5wasm/h5wasm-plugins#readme",
   "peerDependencies": {
-    "h5wasm": "^0.8.8"
+    "h5wasm": "^0.10.1"
   },
   "peerDependenciesMeta": {
     "h5wasm": {
@@ -32,6 +32,6 @@
     }
   },
   "devDependencies": {
-    "h5wasm": "^0.8.8"
+    "h5wasm": "^0.10.1"
   }
 }
